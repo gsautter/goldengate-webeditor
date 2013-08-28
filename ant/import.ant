@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+	Fetches OpenStringPool and RefParse from projects existing in same workspace
+-->
+
+<project name="import">
+	<target name="fetch" depends="fetch-su,fetch-hxu,fetch-gamta,fetch-eio,fetch-iclibs,fetch-gg,fetch-gia,fetch-gfa,fetch-bru,fetch-dst,fetch-dio,fetch-srs" />
+	
+	
+	<target name="check-fetch-su" unless="su.exists">
+		<available property="su.exists" file="../idaho-core/dist/StringUtils.jar"/>
+	</target>
+	<target name="fetch-su" depends="check-fetch-su" if="${su.exists}">
+    	<copy file="../idaho-core/dist/StringUtils.jar" todir="${lib.home}" overwrite="true" verbose="false" />
+	</target>
+	
+	<target name="check-fetch-hxu" unless="hxu.exists">
+		<available property="hxu.exists" file="../idaho-core/dist/HtmlXmlUtil.jar"/>
+	</target>
+	<target name="fetch-hxu" depends="check-fetch-hxu" if="${hxu.exists}">
+    	<copy file="../idaho-core/dist/HtmlXmlUtil.jar" todir="${lib.home}" overwrite="true" verbose="false" />
+	</target>
+	
+	<target name="check-fetch-gamta" unless="gamta.exists">
+		<available property="gamta.exists" file="../idaho-core/dist/Gamta.jar"/>
+	</target>
+	<target name="fetch-gamta" depends="check-fetch-gamta" if="${gamta.exists}">
+    	<copy file="../idaho-core/dist/Gamta.jar" todir="${lib.home}" overwrite="true" verbose="false" />
+	</target>
+	
+	<target name="check-fetch-eio" unless="eio.exists">
+		<available property="eio.exists" file="../idaho-core/dist/EasyIO.jar"/>
+	</target>
+	<target name="fetch-eio" depends="check-fetch-eio" if="${eio.exists}">
+    	<copy file="../idaho-core/dist/EasyIO.jar" todir="${lib.home}" overwrite="true" verbose="false" />
+	</target>
+	
+	<target name="check-fetch-gg" unless="gg.exists">
+		<available property="gg.exists" file="../goldengate-editor/dist/GoldenGATE.jar"/>
+	</target>
+	<target name="fetch-gg" depends="check-fetch-gg" if="${gg.exists}">
+    	<copy file="../goldengate-editor/dist/GoldenGATE.jar" todir="${lib.home}" overwrite="true" verbose="false" />
+	</target>
+	
+	<target name="check-fetch-gia" unless="gia.exists">
+		<available property="gia.exists" file="../idaho-extensions/dist/GamtaImagingAPI.jar"/>
+	</target>
+	<target name="fetch-gia" depends="check-fetch-gia" if="${gia.exists}">
+    	<copy file="../idaho-extensions/dist/GamtaImagingAPI.jar" todir="${lib.home}" overwrite="true" verbose="false" />
+	</target>
+	
+	<target name="check-fetch-gfa" unless="gfa.exists">
+		<available property="gfa.exists" file="../idaho-extensions/dist/GamtaFeedbackAPI.jar"/>
+	</target>
+	<target name="fetch-gfa" depends="check-fetch-gfa" if="${gfa.exists}">
+    	<copy file="../idaho-extensions/dist/GamtaFeedbackAPI.jar" todir="${lib.home}" overwrite="true" verbose="false" />
+	</target>
+	
+	<target name="check-fetch-bru" unless="bru.exists">
+		<available property="bru.exists" file="../idaho-extensions/dist/BibRefUtils.jar"/>
+	</target>
+	<target name="fetch-bru" depends="check-fetch-bru" if="${bru.exists}">
+    	<copy file="../idaho-extensions/dist/BibRefUtils.jar" todir="${lib.home}" overwrite="true" verbose="false" />
+	</target>
+	
+	<target name="check-fetch-iclibs" unless="iclibs.exists">
+		<available property="iclibs.exists" file="../idaho-core/lib/mail.jar"/>
+	</target>
+	<target name="fetch-iclibs" depends="check-fetch-iclibs" if="${iclibs.exists}">
+    	<copy todir="${lib.home}" overwrite="true" verbose="false">
+    		<fileset dir="../idaho-core/lib/" includes="**.jar" excludes="servlet-api.jar"/>
+    	</copy>
+	</target>
+	
+	<target name="check-fetch-dst" unless="dst.exists">
+		<available property="dst.exists" file="../goldengate-server-docs/dist/Components/Bin/GgServerDST.jar"/>
+	</target>
+	<target name="fetch-dst" depends="check-fetch-dst" if="${dst.exists}">
+    	<copy file="../goldengate-server-docs/dist/Components/Bin/GgServerDST.jar" todir="${lib.home}" overwrite="true" verbose="false" />
+	</target>
+	
+	<target name="check-fetch-dio" unless="dio.exists">
+		<available property="dio.exists" file="../goldengate-server-docs/dist/WEB-INF/lib/DioDocumentServlet.jar"/>
+	</target>
+	<target name="fetch-dio" depends="check-fetch-dio" if="${dio.exists}">
+    	<copy file="../goldengate-server-docs/dist/WEB-INF/lib/DioDocumentServlet.jar" todir="${lib.home}" overwrite="true" verbose="false" />
+	</target>
+	
+	<target name="check-fetch-srs" unless="srs.exists">
+		<available property="srs.exists" file="../goldengate-server-docs/dist/WEB-INF/lib/GgSrsSearchPortal.jar"/>
+	</target>
+	<target name="fetch-srs" depends="check-fetch-srs" if="${srs.exists}">
+    	<copy file="../goldengate-server-docs/dist/WEB-INF/lib/GgSrsSearchPortal.jar" todir="${lib.home}" overwrite="true" verbose="false" />
+	</target>
+</project>

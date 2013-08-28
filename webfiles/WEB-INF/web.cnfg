@@ -1,0 +1,9 @@
+//	access to authentication servlet
+AuthServletName = "GgServerManager";
+AuthServletPath = "manager";
+
+//	database connection (this default setting uses Apache Derby in embedded mode, but you can also use a different database)
+EasyIO.JDBC.DriverClassName = "org.apache.derby.jdbc.EmbeddedDriver";
+EasyIO.JDBC.DriverClassPath = "./WEB-INF/lib/derby.jar";
+EasyIO.JDBC.TerminalSemicolon = "NO";
+EasyIO.JDBC.Url = "jdbc:derby:DerbyDB/GgServerTestDB;create=true";

@@ -1,0 +1,6 @@
+GgConfigName = "ExampleConfiguration";
+GgConfigPath = "Absolute/Path/of/ExampleConfiguration";
+//GgConfigHost = "http://example.url.com/path/to/Configurations/";
+cssNames = "dioOnlineEditor.css";
+AuthServletName = "GgServerManager";
+documentStorageOff = "true";

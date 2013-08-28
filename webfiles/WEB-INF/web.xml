@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<web-app>
+	
+	<!-- this servlet is deactivated by default, as you might not have access to DIO, or simply do not want to use it. -->
+	<!--
+	<servlet>
+		<servlet-name>DioOnlineEditor</servlet-name>
+		<servlet-class>de.uka.ipd.idaho.goldenGate.webEditor.dio.DioOnlineEditorServlet</servlet-class>
+		<init-param>
+			<param-name>dataPath</param-name>
+			<param-value>dioOnlineEditorData</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DioOnlineEditor</servlet-name>
+		<url-pattern>/editor</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>DioOnlineEditor</servlet-name>
+		<url-pattern>/editor/*</url-pattern>
+	</servlet-mapping>
+	-->
+	
+	<!-- this servlet is deactivated by default, as you might want to enable users to edit documents in the serach portal, but not offer upload and processing of user documents. -->
+	<!--
+	<servlet>
+		<servlet-name>OnlineEditor</servlet-name>
+		<servlet-class>de.uka.ipd.idaho.goldenGate.webEditor.OnlineEditorServlet</servlet-class>
+		<init-param>
+			<param-name>dataPath</param-name>
+			<param-value>onlineEditorData</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>OnlineEditor</servlet-name>
+		<url-pattern>/markup</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>OnlineEditor</servlet-name>
+		<url-pattern>/markup/*</url-pattern>
+	</servlet-mapping>
+	-->
+</web-app>

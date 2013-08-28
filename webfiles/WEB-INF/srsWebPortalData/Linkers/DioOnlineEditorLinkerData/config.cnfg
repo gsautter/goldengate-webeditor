@@ -1,0 +1,2 @@
+onlineEditorServletName = "DioOnlineEditor";
+onlineEditorServletPath = "http://localhost:8080/GgServer/editor";

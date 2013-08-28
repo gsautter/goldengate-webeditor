@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+	Does all the packing. That is, creates the files that live in dist/
+-->
+
+<project name="dist">
+	<target name="zips" depends="onlineeditorzip,dioonlineeditorzip">
+	</target>
+	
+	<target name="onlineeditorzip" depends="onlineeditorjar,docsources">
+		<delete file="${pack.onlineeditor}" />
+		<zip destfile="${pack.onlineeditor}">
+			<fileset dir="${file.home}">
+				<exclude name="**/WEB-INF/dioOnlineEditorData/**" />
+				<exclude name="**/WEB-INF/srsWebPortalData/**" />
+				<exclude name="**/WEB-INF/managerData/**" />
+			</fileset>
+			<fileset dir="${dist.home}">
+				<include name="**/WEB-INF/**" />
+				<exclude name="**/WEB-INF/dioOnlineEditorData/**" />
+				<exclude name="**/WEB-INF/srsWebPortalData/**" />
+				<exclude name="**/WEB-INF/managerData/**" />
+			</fileset>
+			<fileset dir="." includes="LICENSE.txt"/>
+		</zip>
+	</target>
+	
+	<target name="onlineeditorjar">
+		<delete file="${jar.onlineeditor}" />
+		<jar destfile="${jar.onlineeditor}" >
+			<fileset dir="${build.home}/classes" includes="**/goldenGate/webEditor/*.class" />
+			<fileset dir="${src.home}" includes="**/goldenGate/webEditor/*.java" />
+			<fileset dir="." includes="LICENSE.txt"/>
+		</jar>
+	</target>
+	
+	<target name="docsources">
+		<delete file="${jar.docsources}" />
+		<jar destfile="${jar.docsources}" >
+			<fileset dir="${build.home}/classes" includes="**/goldenGate/webEditor/docSources/**" />
+			<fileset dir="${src.home}" includes="**/goldenGate/webEditor/docSources/**" />
+			<fileset dir="." includes="LICENSE.txt"/>
+		</jar>
+	</target>
+	
+	<target name="check-dio" unless="dio.exists">
+		<available property="dio.exists" file="lib/DioDocumentServlet.jar"/>
+	</target>
+	<target name="dioonlineeditorzip" depends="check-dio,onlineeditorjar,dioonlineeditorjar,dioeditorlinker,dioeditormodul,diodocsources" if="${dio.exists}">
+		<delete file="${pack.dioonlineeditor}" />
+		<zip destfile="${pack.dioonlineeditor}">
+			<fileset dir="${file.home}" excludes="**/WEB-INF/onlineEditorData/**" />
+			<fileset dir="${dist.home}" includes="**/WEB-INF/**" excludes="**/WEB-INF/onlineEditorData/**" />
+			<fileset dir="." includes="LICENSE.txt"/>
+		</zip>
+	</target>
+	
+	<target name="dioonlineeditorjar" depends="check-dio" if="${dio.exists}">
+		<delete file="${jar.dioonlineeditor}" />
+		<jar destfile="${jar.dioonlineeditor}" >
+			<fileset dir="${build.home}/classes" includes="**/goldenGate/webEditor/*.class" />
+			<fileset dir="${build.home}/classes" includes="**/goldenGate/webEditor/dio/DioOnlineEditorServlet*.class" />
+			<fileset dir="${src.home}" includes="**/goldenGate/webEditor/*.java" />
+			<fileset dir="${src.home}" includes="**/goldenGate/webEditor/dio/DioOnlineEditorServlet.java" />
+			<fileset dir="." includes="LICENSE.txt"/>
+		</jar>
+	</target>
+	
+	<target name="dioeditorlinker" depends="check-dio" if="${dio.exists}">
+		<delete file="${jar.dioeditorlinker}" />
+		<jar destfile="${jar.dioeditorlinker}" >
+			<fileset dir="${build.home}/classes" includes="**/goldenGate/webEditor/dio/DioOnlineEditorLinker*.class" />
+			<fileset dir="${src.home}" includes="**/goldenGate/webEditor/dio/DioOnlineEditorLinker.java" />
+			<fileset dir="." includes="LICENSE.txt"/>
+		</jar>
+	</target>
+	
+	<target name="dioeditormodul" depends="check-dio" if="${dio.exists}">
+		<delete file="${jar.dioeditormodul}" />
+		<jar destfile="${jar.dioeditormodul}" >
+			<fileset dir="${build.home}/classes" includes="**/goldenGate/webEditor/dio/DioOnlineEditorModul*.class" />
+			<fileset dir="${src.home}" includes="**/goldenGate/webEditor/dio/DioOnlineEditorModul.java" />
+			<fileset dir="." includes="LICENSE.txt"/>
+		</jar>
+	</target>
+	
+	<target name="diodocsources">
+		<delete file="${jar.diodocsources}" />
+		<jar destfile="${jar.diodocsources}" >
+			<fileset dir="${build.home}/classes" includes="**/goldenGate/webEditor/docSources/**" />
+			<fileset dir="${src.home}" includes="**/goldenGate/webEditor/docSources/**" />
+			<fileset dir="." includes="LICENSE.txt"/>
+		</jar>
+	</target>
+</project>

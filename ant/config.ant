@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- the project global configuration for the build system.
+ 
+ Please: be very careful when modifing this, as this file lives in GIT and you can easily break
+ other peoples system when commiting changes to this file. -->
+
+<project name="config">
+	
+	<!-- =================================================================== -->
+	<!-- DIRECTORY CONFIGURATION -->
+	
+	<!-- root directory of the common source tree -->
+	<property name="src.home" value="src" />
+	
+	<!-- directory that contains all libraries that are required in the .war -->
+	<property name="lib.home" value="lib" />
+	
+	<!-- build directory that will contain all the .jars and what else is required for a .war -->
+	<property name="build.home" value="build" />
+	
+	<!-- build directory that contains all files to include in the .zips except for the .jars -->
+	<property name="file.home" value="webfiles" />
+	
+	<!-- directory that contains packed archives, such as the .war -->
+	<property name="dist.home" value="dist" />
+	
+	
+	<!-- path to the .jar file that shall be created -->
+	<property name="jar.onlineeditor" value="${dist.home}/WEB-INF/lib/OnlineEditorServlet.jar" />
+	
+	<!-- path to the .jar file that shall be created -->
+	<property name="jar.docsources" value="${dist.home}/WEB-INF/onlineEditorData/DocSources/DocSources.jar" />
+	
+	<!-- path to the .jar file that shall be created -->
+	<property name="jar.dioonlineeditor" value="${dist.home}/WEB-INF/lib/DioOnlineEditorServlet.jar" />
+	
+	<!-- path to the .jar file that shall be created -->
+	<property name="jar.diodocsources" value="${dist.home}/WEB-INF/dioOnlineEditorData/DocSources/DocSources.jar" />
+	
+	<!-- path to the .jar file that shall be created -->
+	<property name="jar.dioeditorlinker" value="${dist.home}/WEB-INF/srsWebPortalData/Linkers/DioOnlineEditorLinker.jar" />
+	
+	<!-- path to the .jar file that shall be created -->
+	<property name="jar.dioeditormodul" value="${dist.home}/WEB-INF/managerData/Moduls/DioOnlineEditorModul.jar" />
+	
+	
+	<!-- path to the application .zip file that shall be created -->
+	<property name="pack.onlineeditor" value="${dist.home}/GgServerOnlineEditor.zip" />
+	
+	<!-- path to the application .zip file that shall be created -->
+	<property name="pack.dioonlineeditor" value="${dist.home}/GgServerDioOnlineEditor.zip" />
+</project>
