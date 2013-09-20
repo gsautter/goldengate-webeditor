@@ -114,8 +114,6 @@ public class OnlineEditorServlet extends HtmlServlet implements BibRefConstants 
 	
 	private File uploadCacheFolder = null;
 	
-	private WebAppHost webAppHost;
-	
 	private GoldenGateConfiguration ggConfig = null;
 	private GoldenGATE goldenGate = null;
 	private DocumentFormat[] loadDocFormats = {};
@@ -142,54 +140,8 @@ public class OnlineEditorServlet extends HtmlServlet implements BibRefConstants 
 	protected void doInit() throws ServletException {
 		super.doInit();
 		
-		//	read how to access GoldenGATE config
-		String ggConfigName = this.getSetting("GgConfigName");
-		String ggConfigHost = this.getSetting("GgConfigHost");
-		String ggConfigPath = this.getSetting("GgConfigPath");
-		if (ggConfigName == null)
-			throw new RuntimeException("Unable to access GoldenGATE Configuration.");
-		
-		//	load configuration
-		try {
-			this.ggConfig = ConfigurationUtils.getConfiguration(ggConfigName, ggConfigPath, ggConfigHost, this.dataFolder);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException("Unable to access GoldenGATE Configuration.", ioe);
-		}
-		
-		//	check if we got a configuration from somewhere
-		if (this.ggConfig == null)
-			throw new RuntimeException("Unable to access GoldenGATE Configuration.");
-		
-		//	load GoldenGATE core
-		try {
-			this.goldenGate = GoldenGATE.openGoldenGATE(this.ggConfig, false, false);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException("Unable to load GoldenGATE instance", ioe);
-		}
-		
-		//	get available document formats capable of loading
-		DocumentFormatProvider[] docFormatProviders = this.goldenGate.getDocumentFormatProviders();
-		ArrayList loadDocFormatList = new ArrayList();
-		for (int p = 0; p < docFormatProviders.length; p++) {
-			String[] dfns = docFormatProviders[p].getLoadFormatNames();
-			for (int f = 0; f < dfns.length; f++) {
-				DocumentFormat df = docFormatProviders[p].getFormatForName(dfns[f]);
-				if (df != null)
-					loadDocFormatList.add(df);
-			}
-		}
-		if (loadDocFormatList.size() != 0)
-			this.loadDocFormats = ((DocumentFormat[]) loadDocFormatList.toArray(new DocumentFormat[loadDocFormatList.size()]));
-		
-		//	TODO use specialized online editor doc formats only, as they handle cutting out excerpts and modifying the document ID internally, before first saving.
-		
 		//	create request handler
 		this.requestHandler = new OnlineEditorRequestHandler();
-		
-		//	connect to host for authentication and session handling
-		this.webAppHost = WebAppHost.getInstance(this.getServletContext());
 		
 		//	set up upload caching
 		this.uploadCacheFolder = new File(this.dataFolder, "UploadCache");
@@ -209,15 +161,74 @@ public class OnlineEditorServlet extends HtmlServlet implements BibRefConstants 
 		//	TODO_later load custom reference type system if configured
 		this.refTypeSystem = BibRefTypeSystem.getDefaultInstance();
 		
-		//	get custom functions to prefill cache
-		this.fetchCustomFunctions();
-		
 		//	set up local document storage
 		if (!"true".equals(this.getSetting("documentStorageOff", "false")))
 			this.createDocumentStore();
 	}
 	
-	//	TODO find some way of reloading GoldenGATE instance, e.g. for configuration updates (best to implement in super class)
+	/* (non-Javadoc)
+	 * @see de.uka.ipd.idaho.easyIO.web.HtmlServlet#reInit()
+	 */
+	protected void reInit() throws ServletException {
+		super.reInit();
+		
+		//	check if any requests running
+		if ((this.requestHandler != null) && (this.requestHandler.getRunningRequestCount() != 0))
+			throw new ServletException("Unable to reload GoldenGATE, there are request running.");
+		
+		//	shut down GoldenGATE
+		if (this.goldenGate != null) {
+			this.goldenGate.exitShutdown();
+			this.goldenGate = null;
+			this.ggConfig = null;
+		}
+		
+		//	read how to access GoldenGATE config
+		String ggConfigName = this.getSetting("GgConfigName");
+		String ggConfigHost = this.getSetting("GgConfigHost");
+		String ggConfigPath = this.getSetting("GgConfigPath");
+		if (ggConfigName == null)
+			throw new ServletException("Unable to access GoldenGATE Configuration.");
+		
+		//	load configuration
+		try {
+			this.ggConfig = ConfigurationUtils.getConfiguration(ggConfigName, ggConfigPath, ggConfigHost, this.dataFolder);
+		}
+		catch (IOException ioe) {
+			throw new ServletException("Unable to access GoldenGATE Configuration.", ioe);
+		}
+		
+		//	check if we got a configuration from somewhere
+		if (this.ggConfig == null)
+			throw new ServletException("Unable to access GoldenGATE Configuration.");
+		
+		//	load GoldenGATE core
+		try {
+			this.goldenGate = GoldenGATE.openGoldenGATE(this.ggConfig, false, false);
+		}
+		catch (IOException ioe) {
+			throw new ServletException("Unable to load GoldenGATE instance", ioe);
+		}
+		
+		//	get available document formats capable of loading
+		DocumentFormatProvider[] docFormatProviders = this.goldenGate.getDocumentFormatProviders();
+		ArrayList loadDocFormatList = new ArrayList();
+		for (int p = 0; p < docFormatProviders.length; p++) {
+			String[] dfns = docFormatProviders[p].getLoadFormatNames();
+			for (int f = 0; f < dfns.length; f++) {
+				DocumentFormat df = docFormatProviders[p].getFormatForName(dfns[f]);
+				if (df != null)
+					loadDocFormatList.add(df);
+			}
+		}
+		if (loadDocFormatList.size() != 0)
+			this.loadDocFormats = ((DocumentFormat[]) loadDocFormatList.toArray(new DocumentFormat[loadDocFormatList.size()]));
+		
+		//	TODO use specialized online editor doc formats only, as they handle cutting out excerpts and modifying the document ID internally, before first saving.
+		
+		//	get custom functions to prefill cache
+		this.fetchCustomFunctions();
+	}
 	
 	private void createDocumentStore() {
 		
@@ -293,7 +304,8 @@ public class OnlineEditorServlet extends HtmlServlet implements BibRefConstants 
 		}
 		
 		//	disconnect from database
-		this.io.close();
+		if (this.io != null)
+			this.io.close();
 	}
 	
 	/**
@@ -756,16 +768,17 @@ public class OnlineEditorServlet extends HtmlServlet implements BibRefConstants 
 			return;
 		
 		//	check authentication
-		String userName = this.webAppHost.getUserName(request);
-		if (userName == null) {
-			HtmlPageBuilder lpb = this.webAppHost.getLoginPageBuilder(this, request, response, "includeBody", null);
-			this.sendHtmlPage(lpb);
+		if (!this.webAppHost.isAuthenticated(request)) {
+			this.sendHtmlPage(this.webAppHost.getLoginPageBuilder(this, request, response, "includeBody", null));
 			return;
 		}
 		
 		//	request to handler
 		if (this.requestHandler.handleRequest(request, response))
 			return;
+		
+		//	get user name
+		String userName = this.webAppHost.getUserName(request);
 		
 		//	call sub class specific handler
 		if (this.doGet(request, response, userName))
@@ -963,7 +976,7 @@ public class OnlineEditorServlet extends HtmlServlet implements BibRefConstants 
 	}
 	
 	/**
-	 * Send the default page. This implemetation produces a page listing the
+	 * Send the default page. This implementation produces a page listing the
 	 * pending requests of a user. Sub classes are welcome to overwrite this
 	 * method to provide additional functionality. However, they have to include
 	 * a call to WebAppHost.writeAccountManagerHtml() somewhere.
@@ -999,16 +1012,17 @@ public class OnlineEditorServlet extends HtmlServlet implements BibRefConstants 
 			return;
 		
 		//	check authentication
-		String userName = this.webAppHost.getUserName(request);
-		if (userName == null) {
-			HtmlPageBuilder lpb = this.webAppHost.getLoginPageBuilder(this, request, response, "includeBody", null);
-			this.sendHtmlPage(lpb);
+		if (!this.webAppHost.isAuthenticated(request)) {
+			this.sendHtmlPage(this.webAppHost.getLoginPageBuilder(this, request, response, "includeBody", null));
 			return;
 		}
 		
 		//	request to handler
 		if (this.requestHandler.handleRequest(request, response))
 			return;
+		
+		//	get user name
+		String userName = this.webAppHost.getUserName(request);
 		
 		//	call sub class specific handler
 		if (this.doPost(request, response, userName))
@@ -1782,8 +1796,7 @@ public class OnlineEditorServlet extends HtmlServlet implements BibRefConstants 
 	public String runDocumentProcessor(HttpSession session, String docId, String annotationId, String dpName, String dpLabel) {
 		
 		//	check authentication and permission
-		String userName = this.webAppHost.getUserName(session);
-		if (userName == null)
+		if (!this.webAppHost.isAuthenticated(session))
 			return null;
 		
 		//	check document ID

@@ -21,7 +21,7 @@
 	</servlet-mapping>
 	-->
 	
-	<!-- this servlet is deactivated by default, as you might want to enable users to edit documents in the serach portal, but not offer upload and processing of user documents. -->
+	<!-- this group of servlets is deactivated by default, as you might want to enable users to edit documents in the search portal, but not offer upload and processing of user documents. -->
 	<!--
 	<servlet>
 		<servlet-name>OnlineEditor</servlet-name>
@@ -38,6 +38,30 @@
 	<servlet-mapping>
 		<servlet-name>OnlineEditor</servlet-name>
 		<url-pattern>/markup/*</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>ResServlet</servlet-name>
+		<servlet-class>de.uka.ipd.idaho.easyIO.web.ResourceServlet</servlet-class>
+		<init-param>
+			<param-name>dataPath</param-name>
+			<param-value>resData</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ResServlet</servlet-name>
+		<url-pattern>/resources/*</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>ReInit</servlet-name>
+		<servlet-class>de.uka.ipd.idaho.easyIO.web.ReInitializerServlet</servlet-class>
+		<init-param>
+			<param-name>dataPath</param-name>
+			<param-value>reInitData</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ReInit</servlet-name>
+		<url-pattern>/reInit</url-pattern>
 	</servlet-mapping>
 	-->
 </web-app>

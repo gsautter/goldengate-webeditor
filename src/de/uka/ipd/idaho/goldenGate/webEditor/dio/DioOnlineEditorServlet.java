@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import de.uka.ipd.idaho.easyIO.web.WebAppHost;
 import de.uka.ipd.idaho.easyIO.web.WebAppHost.AuthenticationProvider;
 import de.uka.ipd.idaho.gamta.MutableAnnotation;
 import de.uka.ipd.idaho.gamta.util.ProgressMonitor;
@@ -54,16 +53,12 @@ import de.uka.ipd.idaho.htmlXmlUtil.accessories.HtmlPageBuilder;
 public class DioOnlineEditorServlet extends OnlineEditorServlet {
 	private String authServletName = null;
 	private AuthenticatedWebClientServlet authServlet = null;
-	private WebAppHost webAppHost;
 	
 	/* (non-Javadoc)
 	 * @see de.uka.ipd.idaho.goldenGate.webEditor.OnlineEditorServlet#doInit()
 	 */
 	protected void doInit() throws ServletException {
 		super.doInit();
-		
-		//	connect to host for authentication and session handling
-		this.webAppHost = WebAppHost.getInstance(this.getServletContext());
 		
 		//	connect to authenticated web client servlet backend access
 		this.authServletName = this.getSetting("AuthServletName");
@@ -78,8 +73,7 @@ public class DioOnlineEditorServlet extends OnlineEditorServlet {
 		
 		//	ensure authentication is with backing GoldenGATE server if local storage unavailable
 		if (!this.isLocalDocumentStoreAvailable() && (this.getAuthClient(request.getSession(false)) == null)) {
-			HtmlPageBuilder lpb = this.webAppHost.getLoginPageBuilder(this, request, response, "includeBody", null);
-			this.sendHtmlPage(lpb);
+			this.sendHtmlPage(this.webAppHost.getLoginPageBuilder(this, request, response, "includeBody", null));
 			return;
 		}
 		
@@ -106,8 +100,7 @@ public class DioOnlineEditorServlet extends OnlineEditorServlet {
 		
 		//	ensure authentication is with backing GoldenGATE server if local storage unavailable
 		if (!this.isLocalDocumentStoreAvailable() && (this.getAuthClient(request.getSession(false)) == null)) {
-			HtmlPageBuilder lpb = this.webAppHost.getLoginPageBuilder(this, request, response, "includeBody", null);
-			this.sendHtmlPage(lpb);
+			this.sendHtmlPage(this.webAppHost.getLoginPageBuilder(this, request, response, "includeBody", null));
 			return;
 		}
 		
