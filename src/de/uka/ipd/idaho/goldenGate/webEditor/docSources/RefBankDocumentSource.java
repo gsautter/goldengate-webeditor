@@ -97,7 +97,7 @@ public class RefBankDocumentSource extends DocumentSource implements BibRefConst
 		} catch (Exception e) {}
 		
 		//	do search
-		BibRefIterator brit = this.rbk.findRefs(null, query.getAttribute(AUTHOR_ANNOTATION_TYPE), query.getAttribute(TITLE_ANNOTATION_TYPE), year, this.getOrigin(query), extId, extIdType);
+		BibRefIterator brit = this.rbk.findRefs(null, query.getAttribute(AUTHOR_ANNOTATION_TYPE), query.getAttribute(TITLE_ANNOTATION_TYPE), year, this.getOrigin(query), extId, extIdType, -1, false);
 		ArrayList rdList = new ArrayList();
 		while (brit.hasNextRef()) {
 			BibRef br = brit.getNextRef();

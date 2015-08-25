@@ -105,7 +105,7 @@ public abstract class DocumentSource {
 	/**
 	 * Obtain the name of the document format to use for importing a document
 	 * described by a reference data set. This method should return null to
-	 * indicate that an import source cannot determin the document format to
+	 * indicate that an import source cannot determine the document format to
 	 * use.
 	 * @param rd the reference data set describing the document to import
 	 * @return the name of the document format to use
@@ -114,7 +114,7 @@ public abstract class DocumentSource {
 	public abstract String getDocumentFormatName(RefData rd) throws IOException;
 	
 	/**
-	 * Load document import sources from the JAR fiels in a given folder.
+	 * Load document import sources from the JAR files in a given folder.
 	 * @param folder the folder to load the document import sources from
 	 * @return the document import sources loaded from the argument folder
 	 */
